@@ -199,13 +199,6 @@
             <p><strong>סך כל ההורדות:</strong> <span id="total-deductions" class="deduction"></span></p>
             <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
             <div class="explanation" id="explanation"></div>
-            <div class="audio-section">
-                <p class="audio-section-title">ועכשיו, בואו נאזין לשיר...</p>
-                <audio controls class="audio-player">
-                    <source src="https://www.zemereshet.co.il/UserFiles/Media//yoram_haroe/YeshLanuOtoTov.mp3" type="audio/mpeg">
-                    הדפדפן שלך לא תומך בהשמעת אודיו.
-                </audio>
-            </div>
         </div>
 
         <!-- Input Form -->
@@ -263,7 +256,9 @@
 
             const totalTax = familyTax + workStatusDeduction;
             const cappedDeduction = Math.min(totalTax, maxTax);
-            const helpDeduction = Math.ceil((netSalary - cappedDeduction) * (1 - 0.955));
+
+            // Help tax: 0.5% of (net salary - capped deduction)
+            const helpDeduction = Math.ceil((netSalary - cappedDeduction) * 0.005);
             const finalSalary = Math.ceil(netSalary - cappedDeduction - helpDeduction);
             const totalDeductions = cappedDeduction + helpDeduction;
 
