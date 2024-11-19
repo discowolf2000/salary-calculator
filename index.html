@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מחשבון שכר</title>
+    <title>מחשבון שכר - מודל אחוזים</title>
     <style>
         /* General Styling */
         body {
@@ -21,13 +21,23 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 20px 30px;
+            animation: slideIn 0.8s ease-in-out;
         }
 
         h1 {
             text-align: center;
             font-size: 2em;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #333;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
+            animation: fadeIn 1.2s ease-in-out;
         }
 
         label {
@@ -35,12 +45,14 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: #555;
+            animation: fadeIn 1.2s ease-in-out;
         }
 
         .description {
             font-size: 0.85em;
             color: #777;
             margin-bottom: 16px;
+            animation: fadeIn 1.2s ease-in-out;
         }
 
         .input-group {
@@ -51,6 +63,7 @@
             border-radius: 5px;
             overflow: hidden;
             margin-bottom: 20px;
+            animation: fadeIn 1.4s ease-in-out;
         }
 
         .input-group input {
@@ -75,6 +88,8 @@
             border-radius: 5px;
             margin-bottom: 20px;
             font-size: 1em;
+            appearance: none;
+            animation: fadeIn 1.4s ease-in-out;
         }
 
         button {
@@ -87,6 +102,7 @@
             font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            animation: fadeIn 1.6s ease-in-out;
         }
 
         button:hover {
@@ -95,11 +111,13 @@
         }
 
         #result {
-            margin-top: 20px;
+            margin-bottom: 20px;
             padding: 15px;
             background-color: #f9fbfd;
             border: 1px solid #ddd;
             border-radius: 10px;
+            display: none;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .result-title {
@@ -108,14 +126,9 @@
             color: #333;
         }
 
-        p {
-            margin: 8px 0;
-            font-size: 1em;
-            color: #444;
-        }
-
-        strong {
-            color: #007bff;
+        .deduction {
+            color: #e57373; /* Light Red for Deductions */
+            font-weight: bold;
         }
 
         #final-salary {
@@ -123,28 +136,96 @@
             font-weight: bold;
             color: #28a745;
         }
+
+        .explanation {
+            margin-top: 15px;
+            font-size: 0.95em; /* Slightly smaller font size */
+            color: #666; /* Slightly lighter shade */
+            line-height: 1.6;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .audio-section {
+            margin-top: 15px;
+        }
+
+        .audio-section-title {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .audio-player {
+            width: 100%; /* Full-width player */
+            max-width: 300px; /* Set max width for smaller size */
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>מחשבון שכר</h1>
+        <h1>מחשבון שכר - מודל אחוזים</h1>
+        <p class="subtitle">מחשבון עבור חברי הזורע לבדיקת השכר במודל האחוזים</p>
+
+        <!-- Results Section -->
+        <div id="result">
+            <p class="result-title">תוצאות:</p>
+            <p><strong>הורדה לפי הסטטוס המשפחתי:</strong> <span id="family-deduction" class="deduction"></span></p>
+            <p><strong>הורדה לפי הסטטוס התעסוקתי:</strong> <span id="work-deduction" class="deduction"></span></p>
+            <p><strong>הורדה למס עזרה הדדית:</strong> <span id="help-deduction" class="deduction"></span></p>
+            <p><strong>סך כל ההורדות:</strong> <span id="total-deductions" class="deduction"></span></p>
+            <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
+            <div class="explanation" id="explanation"></div>
+            <div class="audio-section">
+                <p class="audio-section-title">ועכשיו, בואו נאזין לשיר...</p>
+                <audio controls class="audio-player">
+                    <source src="https://www.zemereshet.co.il/UserFiles/Media//yoram_haroe/YeshLanuOtoTov.mp3" type="audio/mpeg">
+                    הדפדפן שלך לא תומך בהשמעת אודיו.
+                </audio>
+            </div>
+        </div>
+
+        <!-- Input Form -->
         <form id="calculator-form">
             <label for="net-salary">שכר נטו:</label>
-            <p class="description">הזן את השכר החודשי שלך לפני ניכויים.</p>
+            <p class="description">הזן את שכר הנטו שלך (לזוג, את השכר המשותף)</p>
             <div class="input-group">
-                <input type="number" id="net-salary" name="net_salary" placeholder="הזן את השכר נטו שלך" required>
+                <input type="number" id="net-salary" name="net_salary" placeholder="הזן את שכר הנטו שלך" required>
                 <span class="currency-symbol">₪</span>
             </div>
 
-            <label for="employment-status">סטטוס תעסוקה:</label>
-            <p class="description">בחר את רמת התעסוקה שלך: רגיל או בכיר.</p>
+            <label for="employment-status">סטטוס תעסוקתי:</label>
+            <p class="description">בחר אם אתה עובד כרגיל או בסטטוס פנסיונר</p>
             <select id="employment-status" name="employment_status">
                 <option value="regular">רגיל</option>
-                <option value="senior">בכיר</option>
+                <option value="senior">פנסיונר</option>
             </select>
             
             <label for="family-status">סטטוס משפחתי:</label>
-            <p class="description">בחר אם אתה יחיד או חלק מזוג.</p>
+            <p class="description">בחר אם אתה חבר יחיד או זוג</p>
             <select id="family-status" name="family_status">
                 <option value="single">יחיד</option>
                 <option value="couple">זוג</option>
@@ -152,14 +233,6 @@
             
             <button type="button" id="calculate-button">חשב</button>
         </form>
-        <div id="result" style="display: none;">
-            <p class="result-title">תוצאות:</p>
-            <p><strong>ניכוי סטטוס משפחתי:</strong> <span id="family-deduction"></span></p>
-            <p><strong>ניכוי סטטוס תעסוקה:</strong> <span id="work-deduction"></span></p>
-            <p><strong>ניכוי מס עזרה:</strong> <span id="help-deduction"></span></p>
-            <p><strong>סך כל הניכויים:</strong> <span id="total-deductions"></span></p>
-            <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
-        </div>
     </div>
 
     <script>
@@ -200,6 +273,25 @@
             document.getElementById("total-deductions").textContent = `-₪${formatNumber(totalDeductions)}`;
             document.getElementById("final-salary").textContent = `₪${formatNumber(finalSalary)}`;
 
+            // Dynamic Explanation
+            let explanation = `בואו נסביר איך זה עובד...<br>`;
+            explanation += `מס על שכר הנטו שלך מחושב לפי הסטטוס התעסוקתי. עבורך `;
+            explanation += employmentStatus === "regular" ? `כעובד רגיל ` : `כפנסיונר `;
+            explanation += `אחוז המס הוא ${employmentStatus === "regular" ? "7%" : "3.5%"}.<br>`;
+            explanation += `כמו כן יש מס אחיד לפי הסטטוס המשפחתי. `;
+            explanation += familyStatus === "single"
+                ? `עבורך כיחיד המס הוא ₪${formatNumber(familyTax)}.<br>`
+                : `עבורכם כזוג המס הוא ₪${formatNumber(familyTax)}.<br>`;
+            explanation += maxTax === cappedDeduction
+                ? familyStatus === "single"
+                    ? `כיוון שעברת את תקרת המס ₪${formatNumber(maxTax)}, המס שיורד לך הוא ₪${formatNumber(cappedDeduction)}.<br>`
+                    : `כיוון שעברתם את תקרת המס ₪${formatNumber(maxTax)}, המס שיורד לכם הוא ₪${formatNumber(cappedDeduction)}.<br>`
+                : `סך ההורדה הוא ₪${formatNumber(cappedDeduction)}.<br>`;
+            explanation += `ממה שנשאר יורד מס קטן של עזרה הדדית בגובה ₪${formatNumber(helpDeduction)}.`;
+
+            document.getElementById("explanation").innerHTML = explanation;
+
+            // Show the results section
             document.getElementById("result").style.display = "block";
         });
     </script>
