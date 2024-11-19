@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון שכר</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            direction: rtl; /* Fully Right-to-Left */
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .description {
+            font-size: 0.85em;
+            color: #777;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            font-size: 1em;
+        }
+
+        .currency-symbol {
+            background-color: #f4f4f4;
+            padding: 10px;
+            font-size: 1em;
+            color: #555;
+            border-left: 1px solid #ccc;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9fbfd;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .result-title {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        p {
+            margin: 8px 0;
+            font-size: 1em;
+            color: #444;
+        }
+
+        strong {
+            color: #007bff;
+        }
+
+        #final-salary {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>מחשבון שכר</h1>
+        <form id="calculator-form">
+            <label for="net-salary">שכר נטו:</label>
+            <p class="description">הזן את השכר החודשי שלך לפני ניכויים.</p>
+            <div class="input-group">
+                <input type="number" id="net-salary" name="net_salary" placeholder="הזן את השכר נטו שלך" required>
+                <span class="currency-symbol">₪</span>
+            </div>
+
+            <label for="employment-status">סטטוס תעסוקה:</label>
+            <p class="description">בחר את רמת התעסוקה שלך: רגיל או בכיר.</p>
+            <select id="employment-status" name="employment_status">
+                <option value="regular">רגיל</option>
+                <option value="senior">בכיר</option>
+            </select>
+            
+            <label for="family-status">סטטוס משפחתי:</label>
+            <p class="description">בחר אם אתה יחיד או חלק מזוג.</p>
+            <select id="family-status" name="family_status">
+                <option value="single">יחיד</option>
+                <option value="couple">זוג</option>
+            </select>
+            
+            <button type="button" id="calculate-button">חשב</button>
+        </form>
+        <div id="result" style="display: none;">
+            <p class="result-title">תוצאות:</p>
+            <p><strong>ניכוי סטטוס משפחתי:</strong> <span id="family-deduction"></span></p>
+            <p><strong>ניכוי סטטוס תעסוקה:</strong> <span id="work-deduction"></span></p>
+            <p><strong>ניכוי מס עזרה:</strong> <span id="help-deduction"></span></p>
+            <p><strong>סך כל הניכויים:</strong> <span id="total-deductions"></span></p>
+            <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(number) {
+            return number.toLocaleString('en-US'); // Add commas for large numbers
+        }
+
+        document.getElementById("calculate-button").addEventListener("click", function () {
+            const netSalary = parseFloat(document.getElementById("net-salary").value);
+            const employmentStatus = document.getElementById("employment-status").value;
+            const familyStatus = document.getElementById("family-status").value;
+
+            if (isNaN(netSalary) || netSalary <= 0) {
+                alert("אנא הזן שכר נטו תקין.");
+                return;
+            }
+
+            let familyTax = 0, maxTax = 0;
+            if (familyStatus === "single") {
+                familyTax = 475;
+                maxTax = 2500;
+            } else if (familyStatus === "couple") {
+                familyTax = 950;
+                maxTax = 5000;
+            }
+
+            let workStatusDeduction = employmentStatus === "regular" ? netSalary * 0.07 : netSalary * 0.035;
+
+            const totalTax = familyTax + workStatusDeduction;
+            const cappedDeduction = Math.min(totalTax, maxTax);
+            const helpDeduction = Math.ceil((netSalary - cappedDeduction) * (1 - 0.955));
+            const finalSalary = Math.ceil(netSalary - cappedDeduction - helpDeduction);
+            const totalDeductions = cappedDeduction + helpDeduction;
+
+            document.getElementById("family-deduction").textContent = `-₪${formatNumber(Math.ceil(familyTax))}`;
+            document.getElementById("work-deduction").textContent = `-₪${formatNumber(Math.ceil(workStatusDeduction))}`;
+            document.getElementById("help-deduction").textContent = `-₪${formatNumber(helpDeduction)}`;
+            document.getElementById("total-deductions").textContent = `-₪${formatNumber(totalDeductions)}`;
+            document.getElementById("final-salary").textContent = `₪${formatNumber(finalSalary)}`;
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
