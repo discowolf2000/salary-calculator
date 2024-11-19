@@ -199,6 +199,13 @@
             <p><strong>סך כל ההורדות:</strong> <span id="total-deductions" class="deduction"></span></p>
             <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
             <div class="explanation" id="explanation"></div>
+            <div class="audio-section">
+                <p class="audio-section-title">ועכשיו, בואו נאזין לשיר...</p>
+                <audio controls class="audio-player">
+                    <source src="https://www.zemereshet.co.il/UserFiles/Media//yoram_haroe/YeshLanuOtoTov.mp3" type="audio/mpeg">
+                    הדפדפן שלך לא תומך בהשמעת אודיו.
+                </audio>
+            </div>
         </div>
 
         <!-- Input Form -->
@@ -221,7 +228,7 @@
             <p class="description">בחר אם אתה חבר יחיד או זוג</p>
             <select id="family-status" name="family_status">
                 <option value="single">יחיד</option>
-                <option value="couple">זוג</option>
+                <option value="couple" selected>זוג</option> <!-- זוג is now the default -->
             </select>
             
             <button type="button" id="calculate-button">חשב</button>
@@ -257,7 +264,6 @@
             const totalTax = familyTax + workStatusDeduction;
             const cappedDeduction = Math.min(totalTax, maxTax);
 
-            // Help tax: 0.5% of (net salary - capped deduction)
             const helpDeduction = Math.ceil((netSalary - cappedDeduction) * 0.005);
             const finalSalary = Math.ceil(netSalary - cappedDeduction - helpDeduction);
             const totalDeductions = cappedDeduction + helpDeduction;
@@ -268,7 +274,6 @@
             document.getElementById("total-deductions").textContent = `-₪${formatNumber(totalDeductions)}`;
             document.getElementById("final-salary").textContent = `₪${formatNumber(finalSalary)}`;
 
-            // Dynamic Explanation
             let explanation = `בואו נסביר איך זה עובד...<br>`;
             explanation += `מס על שכר הנטו שלך מחושב לפי הסטטוס התעסוקתי. עבורך `;
             explanation += employmentStatus === "regular" ? `כעובד רגיל ` : `כפנסיונר `;
@@ -286,7 +291,6 @@
 
             document.getElementById("explanation").innerHTML = explanation;
 
-            // Show the results section
             document.getElementById("result").style.display = "block";
         });
     </script>
