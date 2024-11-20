@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  <meta property="og:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
+  <meta property="og:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  <meta property="og:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
+  <meta property="og:url" content="https://discowolf2000.github.io/salary-calculator/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
+  <meta name="twitter:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
+  <title>מחשבון - מודל אחוזים</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>מחשבון - מודל אחוזים</h1>
+    <p class="subtitle">מחשבון עבור חברי הזורע לבדיקת השכר במודל האחוזים</p>
+
+    <!-- Results Section -->
+    <div id="result" class="hidden">
+      <p class="result-title">תוצאות:</p>
+      <p><strong>הורדה לפי הסטטוס המשפחתי:</strong> <span id="family-deduction" class="deduction"></span></p>
+      <p><strong>הורדה לפי הסטטוס התעסוקתי:</strong> <span id="work-deduction" class="deduction"></span></p>
+      <p><strong>הורדה למס עזרה הדדית:</strong> <span id="help-deduction" class="deduction"></span></p>
+      <p><strong>סך כל ההורדות:</strong> <span id="total-deductions" class="deduction"></span></p>
+      <p><strong>שכר סופי:</strong> <span id="final-salary"></span></p>
+      <div class="explanation" id="explanation"></div>
+      <div class="audio-section">
+        <p class="audio-section-title">ועכשיו, בואו נאזין לשיר...</p>
+        <audio controls class="audio-player">
+          <source src="https://www.zemereshet.co.il/UserFiles/Media//yoram_haroe/YeshLanuOtoTov.mp3" type="audio/mpeg">
+          הדפדפן שלך לא תומך בהשמעת אודיו.
+        </audio>
+      </div>
+    </div>
+
+    <!-- Input Form -->
+    <form id="calculator-form">
+      <!-- Family Status -->
+      <label for="family-status">סטטוס משפחתי:</label>
+      <p class="description">בחר אם משפחה של יחיד או זוג</p>
+      <select id="family-status" name="family_status">
+        <option value="single">יחיד</option>
+        <option value="couple" selected>זוג</option>
+      </select>
+
+      <!-- Work Status (Conditional) -->
+      <div id="work-status-section">
+        <label for="work-status">סטטוס תעסוקתי:</label>
+        <p class="description">בחר את הסטטוס התעסוקתי של בני הזוג</p>
+        <select id="work-status" name="work_status">
+          <option value="both-working" selected>שני בני הזוג עובדים</option>
+          <option value="one-working">בן זוג אחד עובד ואחד פנסיונר שלא עובד</option>
+          <option value="none-working">שני בני הזוג פנסיונרים שלא עובדים</option>
+        </select>
+      </div>
+
+      <!-- Net Salary -->
+      <div id="net-salary-section">
+        <label id="net-salary-label" for="net-salary">שכר נטו:</label>
+        <p class="description">הזן את שכר הנטו של בן הזוג שעובד:</p>
+        <div class="input-group">
+          <input type="number" id="net-salary" name="net_salary" placeholder="הזן את שכר הנטו שלך" required>
+          <span class="currency-symbol">₪</span>
+        </div>
+      </div>
+
+      <!-- Additional Message -->
+      <div id="additional-message" class="hidden"></div>
+
+      <button type="button" id="calculate-button">חשב</button>
+    </form>
+  </div>
+  <script src="explanation.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
