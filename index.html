@@ -1,189 +1,205 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מחשבון שכר - מודל אחוזים</title>
-    <style>
-        /* General Styling */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7f9;
-            margin: 0;
-            padding: 0;
-            direction: rtl; /* Fully Right-to-Left */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
+  <meta property="og:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  <meta property="og:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
+  <meta property="og:url" content="https://discowolf2000.github.io/salary-calculator/">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
+  <meta name="twitter:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
+  
+  <title>מחשבון מודל אחוזים קיבוץ הזורע</title>
 
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 20px 30px;
-            animation: slideIn 0.8s ease-in-out;
-        }
+  <style>
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7f9;
+        margin: 0;
+        padding: 0;
+        direction: rtl; /* Fully Right-to-Left */
+    }
 
-        h1 {
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 10px;
-            color: #333;
-            animation: fadeIn 1s ease-in-out;
-        }
+    .container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px 30px;
+        animation: slideIn 0.8s ease-in-out;
+    }
 
-        .subtitle {
-            text-align: center;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            color: #555;
-            animation: fadeIn 1.2s ease-in-out;
-        }
+    h1 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 10px;
+        color: #333;
+        animation: fadeIn 1s ease-in-out;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-            animation: fadeIn 1.2s ease-in-out;
-        }
+    .subtitle {
+        text-align: center;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+        color: #555;
+        animation: fadeIn 1.2s ease-in-out;
+    }
 
-        .description {
-            font-size: 0.85em;
-            color: #777;
-            margin-bottom: 16px;
-            animation: fadeIn 1.2s ease-in-out;
-        }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+        animation: fadeIn 1.2s ease-in-out;
+    }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            animation: fadeIn 1.4s ease-in-out;
-        }
+    .description {
+        font-size: 0.85em;
+        color: #777;
+        margin-bottom: 16px;
+        animation: fadeIn 1.2s ease-in-out;
+    }
 
-        .input-group input {
-            flex-grow: 1;
-            padding: 10px;
-            border: none;
-            font-size: 1em;
-        }
+    .input-group {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        animation: fadeIn 1.4s ease-in-out;
+    }
 
-        .currency-symbol {
-            background-color: #f4f4f4;
-            padding: 10px;
-            font-size: 1em;
-            color: #555;
-            border-left: 1px solid #ccc;
-        }
+    .input-group input {
+        flex-grow: 1;
+        padding: 10px;
+        border: none;
+        font-size: 1em;
+    }
 
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 1em;
-            appearance: none;
-            animation: fadeIn 1.4s ease-in-out;
-        }
+    .currency-symbol {
+        background-color: #f4f4f4;
+        padding: 10px;
+        font-size: 1em;
+        color: #555;
+        border-left: 1px solid #ccc;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px 20px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            animation: fadeIn 1.6s ease-in-out;
-        }
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 1em;
+        appearance: none;
+        animation: fadeIn 1.4s ease-in-out;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
+    button {
+        width: 100%;
+        padding: 12px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        animation: fadeIn 1.6s ease-in-out;
+    }
 
-        #result {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9fbfd;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            display: none;
-            animation: fadeIn 1s ease-in-out;
-        }
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
 
-        .result-title {
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            color: #333;
-        }
+    #result {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f9fbfd;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        display: none;
+        animation: fadeIn 1s ease-in-out;
+    }
 
-        .deduction {
-            color: #e57373; /* Light Red for Deductions */
-            font-weight: bold;
-        }
+    .result-title {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+        color: #333;
+    }
 
-        #final-salary {
-            font-size: 2em;
-            font-weight: bold;
-            color: #28a745;
-        }
+    .deduction {
+        color: #e57373; /* Light Red for Deductions */
+        font-weight: bold;
+    }
 
-        .explanation {
-            margin-top: 15px;
-            font-size: 0.95em; /* Slightly smaller font size */
-            color: #666; /* Slightly lighter shade */
-            line-height: 1.6;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
+    #final-salary {
+        font-size: 2em;
+        font-weight: bold;
+        color: #28a745;
+    }
 
-        .audio-section {
-            margin-top: 15px;
-        }
+    .explanation {
+        margin-top: 15px;
+        font-size: 0.95em; /* Slightly smaller font size */
+        color: #666; /* Slightly lighter shade */
+        line-height: 1.6;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+    }
 
-        .audio-section-title {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 5px;
-        }
+    .audio-section {
+        margin-top: 15px;
+    }
 
-        .audio-player {
-            width: 100%; /* Full-width player */
-            max-width: 300px; /* Set max width for smaller size */
-            display: block;
-            margin: 0 auto;
-        }
+    .audio-section-title {
+        font-size: 0.9em;
+        color: #555;
+        margin-bottom: 5px;
+    }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+    .audio-player {
+        width: 100%; /* Full-width player */
+        max-width: 300px; /* Set max width for smaller size */
+        display: block;
+        margin: 0 auto;
+    }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
         }
-    </style>
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+  </style>
 </head>
 <body>
     <div class="container">
