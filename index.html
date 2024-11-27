@@ -1,77 +1,1394 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
-  
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
-  <meta property="og:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
-  <meta property="og:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
-  <meta property="og:url" content="https://discowolf2000.github.io/salary-calculator/">
-  <meta property="og:type" content="website">
-  
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="מחשבון מודל אחוזים קיבוץ הזורע">
-  <meta name="twitter:description" content="מחשבון לחישוב השכר לפי מודל האחוזים בקיבוץ הזורע">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/discowolf2000/salary-calculator/main/calc-og.jpg">
-  
-  <title>מחשבון מודל אחוזים קיבוץ הזורע</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --border-color: #bdc3c7;
+            --highlight-color: #3498db;
+            --background-color: #f5f6fa;
+        }
 
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f7f9;
-      margin: 0;
-      padding: 0;
-      direction: rtl; /* Right-to-Left for Hebrew */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+        body {
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
 
-    .container {
-      text-align: center;
-      max-width: 600px;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease-in-out;
-    }
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    h1 {
-      font-size: 2.5em;
-      color: #d9534f;
-      margin-bottom: 20px;
-      animation: fadeIn 1s ease-in-out;
-    }
+        .main-title {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+        }
 
-    p {
-      font-size: 1.2em;
-      color: #333;
-      margin-top: 0;
-      animation: fadeIn 1.2s ease-in-out;
-    }
+        .family-status-section {
+            max-width: 300px;
+            margin: 0 auto 30px;
+        }
 
-    /* Animations */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-  </style>
+        .members-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .modern-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--highlight-color);
+        }
+
+        .modern-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: var(--highlight-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modern-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Results styling */
+        #resultsContainer {
+            margin-top: 30px;
+        }
+
+        .results-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .individual-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .person-results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .person-results h3 {
+            color: var(--highlight-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .committee-details {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .combined-results {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .expenses-input {
+            padding: 10px;
+            margin-top: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        select, input[type="number"] {
+    width: 80%; /* Adjust the width as needed */
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.currency-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    width: 80%; /* Adjust as needed */
+    margin-bottom: 15px; /* Add spacing between inputs */
+}
+
+.currency-symbol {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-right: 1px solid var(--border-color);
+    color: #7f8c8d;
+}
+
+.currency-input input {
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+    direction: rtl;
+}
+        footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f5f6fa;
+    color: #7f8c8d;
+    font-size: 14px;
+    border-top: 1px solid #bdc3c7;
+    margin-top: 20px;
+}
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .members-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modern-container {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>המחשבון לא זמין</h1>
-    <p>המחשבון לא זמין באופן זמני ביותר לצורך עידכון ושיפור</p>
-  </div>
+    <div class="modern-container">
+        <h1 class="main-title">מחשבון שכר לפי מודל האחוזים</h1>
+        
+        <div class="family-status-section">
+            <div class="form-group">
+                <label for="familyStatus">סטטוס משפחתי:</label>
+                <select id="familyStatus" onchange="togglePersonFields()">
+                    <option value="couple" selected>זוג</option>
+                    <option value="single">חבר בודד</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="members-container">
+            <div id="person1Fields" class="modern-card">
+                <h3>חבר 1</h3>
+                <div class="form-group">
+                    <label for="employmentStatus1">סטטוס תעסוקתי:</label>
+                    <select id="employmentStatus1">
+                        <option value="memberWorking">חבר עובד</option>
+                        <option value="memberNotWorking">חבר שאינו מעביר הכנסה</option>
+                        <option value="seniorNotWorking">גמלאי שאינו עובד</option>
+                        <option value="seniorWorkingKibbutz">גמלאי עובד בקיבוץ</option>
+                        <option value="seniorEntrepreneur">גמלאי יזם</option>
+                        <option value="seniorWorkingMoney">גמלאי מכניס משכורת</option>
+                    </select>
+                </div>
+
+                <div class="income-section">
+                    <h4>מידע על הכנסה</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="committee1">
+                            חבר בועדה בקיבוץ
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="pension1">פנסיה:</label>
+                        <input type="number" id="pension1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="retention1">גמול ששלום:</label>
+                        <input type="number" id="retention1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="entrepreneur1">יזמות:</label>
+                        <input type="number" id="entrepreneur1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="netSalary1">שכר נטו:</label>
+                        <input type="number" id="netSalary1" min="0">
+                        <div>
+                            <label>
+                                <input type="checkbox" id="hasExpenses1" onchange="toggleExpenses(1)">
+                                מקבל החזר הוצאות
+                            </label>
+                            <div id="expensesInput1" class="expenses-input">
+                                <label for="expenses1">סכום החזר הוצאות:</label>
+                                <input type="number" id="expenses1" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="person2Fields" class="modern-card">
+                <h3>חבר 2</h3>
+                <div class="form-group">
+                    <label for="employmentStatus2">סטטוס תעסוקתי:</label>
+                    <select id="employmentStatus2">
+                        <option value="memberWorking">חבר עובד</option>
+                        <option value="memberNotWorking">חבר שאינו מעביר הכנסה</option>
+                        <option value="seniorNotWorking">גמלאי שאינו עובד</option>
+                        <option value="seniorWorkingKibbutz">גמלאי עובד בקיבוץ</option>
+                        <option value="seniorEntrepreneur">גמלאי יזם</option>
+                        <option value="seniorWorkingMoney">גמלאי מכניס משכורת</option>
+                    </select>
+                </div>
+
+                <div class="income-section">
+                    <h4>מידע על הכנסה</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="committee2">
+                            חבר ועדה
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="pension2">פנסיה:</label>
+                        <input type="number" id="pension2" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="retention2">גמול ששלום:</label>
+                        <input type="number" id="retention2" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="entrepreneur2">יזמות:</label>
+                        <input type="number" id="entrepreneur2" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="netSalary2">שכר נטו:</label>
+                        <input type="number" id="netSalary2" min="0">
+                        <div>
+                            <label>
+                                <input type="checkbox" id="hasExpenses2" onchange="toggleExpenses(2)">
+                                מקבל החזר הוצאות
+                            </label>
+                            <div id="expensesInput2" class="expenses-input">
+                                <label for="expenses2">סכום החזר הוצאות:</label>
+                                <input type="number" id="expenses2" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="calculate()" class="modern-button">חשב</button>
+        
+        <div id="resultsContainer"></div>
+    </div>
+
+    <script>
+        function toggleSecondPerson() {
+            const familyStatus = document.getElementById('familyStatus').value;
+            const secondPerson = document.getElementById('secondPerson');
+            secondPerson.style.display = familyStatus === 'couple' ? 'block' : 'none';
+        }
+
+        function toggleExpenses(personNum) {
+            const hasExpenses = document.getElementById(`hasExpenses${personNum}`);
+            const expensesInput = document.getElementById(`expensesInput${personNum}`);
+            expensesInput.style.display = hasExpenses.checked ? 'block' : 'none';
+        }
+
+        // Constants for calculations
+        const memberTax = 0.07; // 7%
+        const seniorTax = 0.035; // 3.5%
+        const deductionLimit = 2500; // Max deduction limit
+        const communityTax = 475; // Fixed community tax
+        const avgSalary = 13920; // Average salary
+        const committeeAmount = 1000; // Committee bonus amount
+        const committeeTax = 0.07; // 7% tax for committee
+        const helpTax = 0.005; // 0.5%
+
+        function toggleInputFields(personNum) {
+            const employmentStatus = document.getElementById(`employmentStatus${personNum}`).value;
+            
+            // Clear inputs for this person
+            clearPersonInputs(personNum);
+            
+            // Get all input containers for the person
+            const pensionContainer = document.getElementById(`pension${personNum}`).parentElement;
+            const retentionContainer = document.getElementById(`retention${personNum}`).parentElement;
+            const entrepreneurContainer = document.getElementById(`entrepreneur${personNum}`).parentElement;
+            const netSalaryContainer = document.getElementById(`netSalary${personNum}`).parentElement;
+
+            // Hide all by default
+            pensionContainer.style.display = 'none';
+            retentionContainer.style.display = 'none'; 
+            entrepreneurContainer.style.display = 'none';
+            netSalaryContainer.style.display = 'none';
+
+            // Show relevant fields based on employment status
+            switch(employmentStatus) {
+                case 'memberWorking':
+                    netSalaryContainer.style.display = 'block';
+                    break;
+                case 'memberNotWorking':
+                    // All fields remain hidden
+                    break;
+                case 'seniorNotWorking':
+                    pensionContainer.style.display = 'block';
+                    break;
+                case 'seniorWorkingKibbutz':
+                    pensionContainer.style.display = 'block';
+                    retentionContainer.style.display = 'block';
+                    document.getElementById(`retention${personNum}`).value = '850';
+                    break;
+                case 'seniorEntrepreneur':
+                    pensionContainer.style.display = 'block';
+                    entrepreneurContainer.style.display = 'block';
+                    break;
+                case 'seniorWorkingMoney':
+                    pensionContainer.style.display = 'block';
+                    netSalaryContainer.style.display = 'block';
+                    break;
+            }
+        }
+
+        // Add event listeners to employment status dropdowns
+        document.getElementById('employmentStatus1').addEventListener('change', () => toggleInputFields(1));
+        document.getElementById('employmentStatus2').addEventListener('change', () => toggleInputFields(2));
+
+        // Initial call to set correct visibility
+        toggleInputFields(1);
+        toggleInputFields(2);
+
+        function calculateForPerson(personNum) {
+            const isCommitteeMember = document.getElementById(`committee${personNum}`).checked;
+            
+            // Calculate base salary (without committee amount)
+            let baseSalary;
+            // ... existing base salary calculations based on status ...
+            
+            // Calculate main deductions
+            const mainTaxDeduction = baseSalary * relevantTax * -1; // (memberTax or seniorTax)
+            const communityTaxDeduction = communityTax * -1;
+            
+            // Calculate initial deductions without help tax
+            const initialMainDeductions = mainTaxDeduction + communityTaxDeduction;
+            
+            // Apply deduction limit
+            let mainDeductions = initialMainDeductions;
+            const isLimitReached = initialMainDeductions < -deductionLimit;
+            if (isLimitReached) {
+                mainDeductions = -deductionLimit;
+            }
+            
+            // Calculate help tax on base salary
+            const helpTaxDeduction = baseSalary * helpTax * -1;
+            
+            // Calculate committee addition and tax if applicable
+            const committeeAmount = isCommitteeMember ? 1000 : 0;
+            const committeeTaxDeduction = isCommitteeMember ? -70 : 0; // Fixed at 70
+            
+            // Total deductions including help tax
+            const totalDeductions = mainDeductions + helpTaxDeduction + committeeTaxDeduction;
+            
+            // Final amount includes base salary plus committee amount (if applicable)
+            const finalAmount = baseSalary + committeeAmount + totalDeductions;
+
+            return {
+                html: `
+                    <div class="person-results">
+                        <h3>תוצאות חבר ${personNum}</h3>
+                        <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
+                        ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
+                        <p>שכר בסיס למיסוי (שכר נטו - החזר הוצאות): ${baseSalary.toFixed(0)} ₪</p>
+                        
+                        ${isCommitteeMember ? `
+                        <div class="committee-details">
+                            <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                            <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                        </div>
+                        ` : ''}
+                        
+                        <p>ניכויים:</p>
+                        <ul>
+                            <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                            <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                            <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                            <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                            </li>
+                            <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                            <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                            ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                        </ul>
+                        <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                        <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                    </div>
+                `,
+                values: {
+                    totalDeductions: totalDeductions,
+                    finalAmount: baseSalary + committeeAmount + totalDeductions
+                }
+            };
+        }
+
+        // Add event listeners to employment status dropdowns
+        document.getElementById('employmentStatus1').addEventListener('change', () => toggleInputFields(1));
+        document.getElementById('employmentStatus2').addEventListener('change', () => toggleInputFields(2));
+
+        // Initial call to set correct visibility
+        toggleInputFields(1);
+        toggleInputFields(2);
+
+        function calculateMemberWorking() {
+            console.log('Inside calculateMemberWorking');
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            function calculateForPerson(personNum) {
+                console.log('Calculating for person', personNum);
+                // Get all the input values
+                const netSalary = Number(document.getElementById(`netSalary${personNum}`).value) || 0;
+                const hasExpenses = document.getElementById(`hasExpenses${personNum}`).checked;
+                const expenses = hasExpenses ? Number(document.getElementById(`expenses${personNum}`).value) || 0 : 0;
+                const isCommitteeMember = document.getElementById(`committee${personNum}`).checked;
+                
+                // Calculate base salary and deductions
+                const baseSalary = netSalary - expenses;
+                const memberTaxDeduction = baseSalary * memberTax * -1;
+                const communityTaxDeduction = communityTax * -1;
+                const helpTaxDeduction = baseSalary * helpTax * -1;
+                
+                // Committee calculations
+                const committeeBonus = isCommitteeMember ? 1000 : 0;
+                const committeeTaxDeduction = isCommitteeMember ? -70 : 0;
+                
+                // Calculate main deductions
+                const initialMainDeductions = memberTaxDeduction + communityTaxDeduction;
+                let mainDeductions = initialMainDeductions;
+                const isLimitReached = initialMainDeductions < -deductionLimit;
+                
+                if (isLimitReached) {
+                    mainDeductions = -deductionLimit;
+                }
+                
+                // Total deductions and final amount
+                const totalDeductions = mainDeductions + helpTaxDeduction + committeeTaxDeduction;
+                const finalAmount = baseSalary + committeeBonus + totalDeductions;
+
+                return {
+                    html: `
+                        <div class="person-results">
+                            <h3>תוצאות חבר ${personNum}</h3>
+                            <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
+                            ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
+                            <p>שכר בסיס למיסוי (שכר נטו - החזר הוצאות): ${baseSalary.toFixed(0)} ₪</p>
+                            
+                            ${isCommitteeMember ? `
+                            <div class="committee-details">
+                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            </div>
+                            ` : ''}
+                            
+                            <p>ניכויים:</p>
+                            <ul>
+                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                                <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                    הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                                </li>
+                                <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                                <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            </ul>
+                            <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                            <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                        </div>
+                    `,
+                    values: {
+                        totalDeductions: totalDeductions,
+                        finalAmount: finalAmount,
+                        isNotWorking: false
+                    }
+                };
+            }
+
+            const resultsContainer = document.getElementById('resultsContainer');
+            console.log('Got results container:', resultsContainer);
+            resultsContainer.innerHTML = '';
+
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'calculationResults';
+            resultsDiv.className = 'results-section';
+
+            if (familyStatus === 'couple') {
+                console.log('Calculating for couple');
+                const person1 = calculateForPerson(1);
+                const person2 = calculateForPerson(2);
+                
+                // Check both employment statuses
+                const employmentStatus1 = document.getElementById('employmentStatus1').value;
+                const employmentStatus2 = document.getElementById('employmentStatus2').value;
+                const isEitherNotWorking = employmentStatus1 === 'memberNotWorking' || 
+                                          employmentStatus2 === 'memberNotWorking';
+                
+                const combinedDeductions = person1.values.totalDeductions + person2.values.totalDeductions;
+                const combinedAmount = person1.values.finalAmount + person2.values.finalAmount;
+
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>תוצאות משולבות</h2>
+                        <p><strong>סך כל הניכויים:</strong> ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת לאחר הורדות:</strong> ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                        ${person2.html}
+                    </div>
+                `;
+            } else {
+                const person1 = calculateForPerson(1);
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>תוצאות משולבות</h2>
+                        <p><strong>סך כל הניכויים:</strong> ${person1.values.totalDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת לאחר הורדות:</strong> ${person1.values.finalAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                    </div>
+                `;
+            }
+
+            resultsContainer.appendChild(resultsDiv);
+        }
+
+        function calculateMemberNotWorking() {
+            console.log('Inside calculateMemberNotWorking');
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            function calculateForPerson(personNum) {
+                console.log('Calculating for person', personNum);
+                // For member not working, use average salary as base
+                const baseSalary = avgSalary * 2;
+                const memberTaxDeduction = baseSalary * memberTax * -1;
+                const communityTaxDeduction = communityTax * -1;
+                
+                // Calculate initial deductions without help tax
+                const initialMainDeductions = memberTaxDeduction + communityTaxDeduction;
+                
+                // Apply deduction limit
+                let mainDeductions = initialMainDeductions;
+                const isLimitReached = initialMainDeductions < -deductionLimit;
+                
+                if (isLimitReached) {
+                    mainDeductions = -deductionLimit;
+                }
+                
+                // Calculate help tax separately (not part of the limit)
+                const helpTaxDeduction = baseSalary * helpTax * -1;
+                
+                // Total deductions including help tax
+                const totalDeductions = mainDeductions + helpTaxDeduction;
+
+                return {
+                    html: `
+                        <div class="person-results">
+                            <h3>תוצאות חבר ${personNum}</h3>
+                            <p>שכר בסיס למיסוי: ${baseSalary.toFixed(0)} ₪</p>
+                            <p>ניכויים:</p>
+                            <ul>
+                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                                <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                    הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                                </li>
+                                <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                                <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                            </ul>
+                            <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                        </div>
+                    `,
+                    values: {
+                        totalDeductions: totalDeductions,
+                        isNotWorking: true
+                    }
+                };
+            }
+
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'calculationResults';
+            resultsDiv.className = 'results-section';
+
+            if (familyStatus === 'couple') {
+                const person1 = calculateForPerson(1);
+                const person2 = calculateForPerson(2);
+                
+                const combinedDeductions = person1.values.totalDeductions + person2.values.totalDeductions;
+                const combinedAmount = person1.values.finalAmount + person2.values.finalAmount;
+
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>חישוב משותף למשכורות</h2>
+                        <p><strong>סך כל הניכויים המשולבים:</strong> ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת משותפת:</strong> ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                        ${person2.html}
+                    </div>
+                `;
+            } else {
+                const person1 = calculateForPerson(1);
+                resultsDiv.innerHTML = person1.html;
+            }
+
+            resultsContainer.appendChild(resultsDiv);
+        }
+
+        function calculateSeniorNotWorking() {
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            function calculateForPerson(personNum) {
+                const pension = Number(document.getElementById(`pension${personNum}`).value) || 0;
+                const isCommitteeMember = document.getElementById(`committee${personNum}`).checked;
+                
+                const baseSalary = pension;
+                const seniorTaxDeduction = baseSalary * seniorTax * -1;
+                const communityTaxDeduction = communityTax * -1;
+                
+                // Committee calculations
+                const committeeBonus = isCommitteeMember ? 1000 : 0;
+                const committeeTaxDeduction = isCommitteeMember ? -70 : 0;
+                
+                // Calculate initial deductions without help tax
+                const initialMainDeductions = seniorTaxDeduction + communityTaxDeduction;
+                
+                // Apply deduction limit
+                let mainDeductions = initialMainDeductions;
+                const isLimitReached = initialMainDeductions < -deductionLimit;
+                
+                if (isLimitReached) {
+                    mainDeductions = -deductionLimit;
+                }
+                
+                // Calculate help tax separately (not part of the limit)
+                const helpTaxDeduction = baseSalary * helpTax * -1;
+                
+                // Total deductions including help tax and committee tax
+                const totalDeductions = mainDeductions + helpTaxDeduction + committeeTaxDeduction;
+                const finalAmount = baseSalary + committeeBonus + totalDeductions;
+
+                return {
+                    html: `
+                        <div class="person-results">
+                            <h3>תוצאות חבר ${personNum}</h3>
+                            <p>פנסיה: ${pension.toFixed(0)} ₪</p>
+                            <p>שכר בסיס למיסוי: ${baseSalary.toFixed(0)} ₪</p>
+                            
+                            ${isCommitteeMember ? `
+                            <div class="committee-details">
+                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            </div>
+                            ` : ''}
+                            
+                            <p>ניכויים:</p>
+                            <ul>
+                                <li>מיסוי פנסיה (${(seniorTax*100).toFixed(1)}%): ${seniorTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                                <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                    הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                                </li>
+                                <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                                <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            </ul>
+                            <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                            <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                        </div>
+                    `,
+                    values: {
+                        totalDeductions: totalDeductions,
+                        finalAmount: finalAmount
+                    }
+                };
+            }
+
+            // Get the results container
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+
+            // Create results div
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'calculationResults';
+            resultsDiv.className = 'results-section';
+
+            // Add results based on family status
+            if (familyStatus === 'couple') {
+                const person1 = calculateForPerson(1);
+                const person2 = calculateForPerson(2);
+                
+                const combinedDeductions = person1.values.totalDeductions + person2.values.totalDeductions;
+                const combinedAmount = person1.values.finalAmount + person2.values.finalAmount;
+
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>חישוב משותף למשכורות</h2>
+                        <p><strong>סך כל הניכויים המשולבים:</strong> ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת משותפת:</strong> ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                        ${person2.html}
+                    </div>
+                `;
+            } else {
+                const person1 = calculateForPerson(1);
+                resultsDiv.innerHTML = person1.html;
+            }
+
+            // Append to the container
+            resultsContainer.appendChild(resultsDiv);
+        }
+
+        function calculateSeniorWorkingKibbutz() {
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            function calculateForPerson(personNum) {
+                const pension = Number(document.getElementById(`pension${personNum}`).value) || 0;
+                const retention = Number(document.getElementById(`retention${personNum}`).value) || 850; // Default to 850 if not set
+                const isCommitteeMember = document.getElementById(`committee${personNum}`).checked;
+                
+                const baseSalary = pension + retention;
+                const seniorTaxDeduction = baseSalary * seniorTax * -1;
+                const communityTaxDeduction = communityTax * -1;
+                
+                // Committee calculations
+                const committeeBonus = isCommitteeMember ? 1000 : 0;
+                const committeeTaxDeduction = isCommitteeMember ? -70 : 0;
+                
+                // Calculate initial deductions without help tax
+                const initialMainDeductions = seniorTaxDeduction + communityTaxDeduction;
+                
+                // Apply deduction limit
+                let mainDeductions = initialMainDeductions;
+                const isLimitReached = initialMainDeductions < -deductionLimit;
+                
+                if (isLimitReached) {
+                    mainDeductions = -deductionLimit;
+                }
+                
+                // Calculate help tax separately (not part of the limit)
+                const helpTaxDeduction = baseSalary * helpTax * -1;
+                
+                // Total deductions including help tax and committee tax
+                const totalDeductions = mainDeductions + helpTaxDeduction + committeeTaxDeduction;
+                const finalAmount = baseSalary + committeeBonus + totalDeductions;
+
+                return {
+                    html: `
+                        <div class="person-results">
+                            <h3>תוצאות חבר ${personNum}</h3>
+                            <p>פנסיה: ${pension.toFixed(0)} ₪</p>
+                            <p>גמול תשלום: ${retention.toFixed(0)} ₪</p>
+                            <p>שכר בסיס למיסוי (פנסיה + גמול תשלום): ${baseSalary.toFixed(0)} ₪</p>
+                            
+                            ${isCommitteeMember ? `
+                            <div class="committee-details">
+                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            </div>
+                            ` : ''}
+                            
+                            <p>ניכויים:</p>
+                            <ul>
+                                <li>מיסוי פנסיה (${(seniorTax*100).toFixed(1)}%): ${seniorTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                                <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                    הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                                </li>
+                                <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                                <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            </ul>
+                            <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                            <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                        </div>
+                    `,
+                    values: {
+                        totalDeductions: totalDeductions,
+                        finalAmount: finalAmount
+                    }
+                };
+            }
+
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'calculationResults';
+            resultsDiv.className = 'results-section';
+
+            if (familyStatus === 'couple') {
+                const person1 = calculateForPerson(1);
+                const person2 = calculateForPerson(2);
+                
+                const combinedDeductions = person1.values.totalDeductions + person2.values.totalDeductions;
+                const combinedAmount = person1.values.finalAmount + person2.values.finalAmount;
+
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>חישוב משותף למשכורות</h2>
+                        <p><strong>סך כל הניכויים המשולבים:</strong> ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת משותפת:</strong> ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                        ${person2.html}
+                    </div>
+                `;
+            } else {
+                const person1 = calculateForPerson(1);
+                resultsDiv.innerHTML = person1.html;
+            }
+
+            resultsContainer.appendChild(resultsDiv);
+        }
+
+        // Since both calculations are identical, we can use the same function for both cases
+        const calculateSeniorEntrepreneur = calculateSeniorWorkingKibbutz;
+
+        function calculateSeniorWorkingMoney() {
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            function calculateForPerson(personNum) {
+                const pension = Number(document.getElementById(`pension${personNum}`).value) || 0;
+                const netSalary = Number(document.getElementById(`netSalary${personNum}`).value) || 0;
+                const hasExpenses = document.getElementById(`hasExpenses${personNum}`).checked;
+                const expenses = hasExpenses ? Number(document.getElementById(`expenses${personNum}`).value) || 0 : 0;
+                const isCommitteeMember = document.getElementById(`committee${personNum}`).checked;
+                
+                const salaryAfterExpenses = netSalary - expenses;
+                const baseSalary = pension + salaryAfterExpenses;
+                
+                // Committee calculations
+                const committeeBonus = isCommitteeMember ? 1000 : 0;
+                const committeeTaxDeduction = isCommitteeMember ? -70 : 0;
+                
+                // Calculate different tax components
+                const pensionTaxDeduction = pension * seniorTax * -1;
+                const salaryTaxDeduction = salaryAfterExpenses * memberTax * -1;
+                const communityTaxDeduction = communityTax * -1;
+                
+                // Calculate initial deductions without help tax
+                const initialMainDeductions = pensionTaxDeduction + salaryTaxDeduction + communityTaxDeduction;
+                
+                // Apply deduction limit
+                let mainDeductions = initialMainDeductions;
+                const isLimitReached = initialMainDeductions < -deductionLimit;
+                
+                if (isLimitReached) {
+                    mainDeductions = -deductionLimit;
+                }
+                
+                // Calculate help tax separately (not part of the limit)
+                const helpTaxDeduction = baseSalary * helpTax * -1;
+                
+                // Total deductions including help tax and committee tax
+                const totalDeductions = mainDeductions + helpTaxDeduction + committeeTaxDeduction;
+                const finalAmount = baseSalary + committeeBonus + totalDeductions;
+
+                return {
+                    html: `
+                        <div class="person-results">
+                            <h3>תוצאות חבר ${personNum}</h3>
+                            <p>פנסיה: ${pension.toFixed(0)} ₪</p>
+                            <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
+                            ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
+                            <p>שכר לאחר הוצאות: ${salaryAfterExpenses.toFixed(0)} ₪</p>
+                            <p>שכר בסיס למיסוי (פנסיה + שכר נטו - הוצאות): ${baseSalary.toFixed(0)} ₪</p>
+                            
+                            ${isCommitteeMember ? `
+                            <div class="committee-details">
+                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            </div>
+                            ` : ''}
+                            
+                            <p>ניכויים:</p>
+                            <ul>
+                                <li>מס פנסיה (${(seniorTax*100).toFixed(1)}%): ${pensionTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסוי על הכנסה מעבודה (${(memberTax*100).toFixed(1)}%): ${salaryTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
+                                <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
+                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                    הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                                </li>
+                                <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
+                                <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            </ul>
+                            <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
+                            <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                        </div>
+                    `,
+                    values: {
+                        totalDeductions: totalDeductions,
+                        finalAmount: finalAmount
+                    }
+                };
+            }
+
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'calculationResults';
+            resultsDiv.className = 'results-section';
+
+            if (familyStatus === 'couple') {
+                const person1 = calculateForPerson(1);
+                const person2 = calculateForPerson(2);
+                
+                const combinedDeductions = person1.values.totalDeductions + person2.values.totalDeductions;
+                const combinedAmount = person1.values.finalAmount + person2.values.finalAmount;
+
+                resultsDiv.innerHTML = `
+                    <div class="combined-results">
+                        <h2>חישוב משותף למשכורות</h2>
+                        <p><strong>סך כל הניכויים המשולבים:</strong> ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p><strong>משכורת משותפת:</strong> ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                    <div class="individual-results">
+                        ${person1.html}
+                        ${person2.html}
+                    </div>
+                `;
+            } else {
+                const person1 = calculateForPerson(1);
+                resultsDiv.innerHTML = person1.html;
+            }
+
+            resultsContainer.appendChild(resultsDiv);
+        }
+
+        function calculate() {
+            console.log('Starting calculations...');
+            const familyStatus = document.getElementById('familyStatus').value;
+            
+            // Get the results container
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            // Calculate person 1 independently
+            const person1Status = document.getElementById('employmentStatus1').value;
+            const person1Results = calculateSinglePerson(1, person1Status);
+            
+            // Calculate person 2 independently (only if couple)
+            let person2Results = null;
+            if (familyStatus === 'couple') {
+                const person2Status = document.getElementById('employmentStatus2').value;
+                person2Results = calculateSinglePerson(2, person2Status);
+            }
+
+            // Display results
+            displayResults(person1Results, person2Results, familyStatus);
+        }
+
+        function calculateSinglePerson(personNum, status) {
+            console.log(`Calculating person ${personNum} with status: ${status}`);
+            
+            // Get inputs specific to this person only
+            const inputs = {
+                netSalary: Number(document.getElementById(`netSalary${personNum}`).value) || 0,
+                pension: Number(document.getElementById(`pension${personNum}`).value) || 0,
+                retention: Number(document.getElementById(`retention${personNum}`).value) || 0,
+                entrepreneur: Number(document.getElementById(`entrepreneur${personNum}`).value) || 0,
+                hasExpenses: document.getElementById(`hasExpenses${personNum}`).checked,
+                expenses: Number(document.getElementById(`expenses${personNum}`).value) || 0,
+                isCommitteeMember: document.getElementById(`committee${personNum}`).checked
+            };
+
+            // Initialize result object with all possible properties
+            let result = {
+                baseSalary: 0,
+                memberTaxDeduction: 0,
+                seniorTaxDeduction: 0,
+                pensionTaxDeduction: 0,
+                salaryTaxDeduction: 0,
+                communityTaxDeduction: communityTax * -1,
+                committeeBonus: inputs.isCommitteeMember ? 1000 : 0,
+                committeeTaxDeduction: inputs.isCommitteeMember ? -70 : 0,
+                helpTaxDeduction: 0,
+                initialMainDeductions: 0,
+                mainDeductions: 0,
+                isLimitReached: false,
+                totalDeductions: 0,
+                finalAmount: 0
+            };
+
+            // Calculate based on status
+            switch(status) {
+                case 'memberWorking':
+                    result.baseSalary = inputs.netSalary - (inputs.hasExpenses ? inputs.expenses : 0);
+                    result.memberTaxDeduction = result.baseSalary * memberTax * -1;
+                    break;
+                    
+                case 'memberNotWorking':
+                    result.baseSalary = avgSalary * 2;
+                    result.memberTaxDeduction = result.baseSalary * memberTax * -1;
+                    break;
+                    
+                case 'seniorNotWorking':
+                    result.baseSalary = inputs.pension;
+                    result.seniorTaxDeduction = result.baseSalary * seniorTax * -1;
+                    break;
+                    
+                case 'seniorWorkingKibbutz':
+                    result.baseSalary = inputs.pension + inputs.retention;
+                    result.seniorTaxDeduction = result.baseSalary * seniorTax * -1;
+                    break;
+                    
+                case 'seniorEntrepreneur':
+                    result.baseSalary = inputs.pension + inputs.entrepreneur;
+                    result.seniorTaxDeduction = result.baseSalary * seniorTax * -1;
+                    break;
+                    
+                case 'seniorWorkingMoney':
+                    const salaryAfterExpenses = inputs.netSalary - (inputs.hasExpenses ? inputs.expenses : 0);
+                    result.baseSalary = inputs.pension + salaryAfterExpenses;
+                    result.pensionTaxDeduction = inputs.pension * seniorTax * -1;
+                    result.salaryTaxDeduction = salaryAfterExpenses * memberTax * -1;
+                    break;
+            }
+
+            // Calculate help tax
+            result.helpTaxDeduction = result.baseSalary * helpTax * -1;
+            
+            // Calculate initial main deductions
+            result.initialMainDeductions = (result.memberTaxDeduction || 0) + 
+                                           (result.seniorTaxDeduction || 0) + 
+                                           (result.pensionTaxDeduction || 0) + 
+                                           (result.salaryTaxDeduction || 0) + 
+                                           result.communityTaxDeduction;
+            
+            // Apply deduction limit
+            result.isLimitReached = result.initialMainDeductions < -deductionLimit;
+            result.mainDeductions = result.isLimitReached ? -deductionLimit : result.initialMainDeductions;
+            
+            // Calculate total deductions and final amount
+            result.totalDeductions = result.mainDeductions + result.helpTaxDeduction + result.committeeTaxDeduction;
+            result.finalAmount = result.baseSalary + result.committeeBonus + result.totalDeductions;
+
+            return {
+                status: status,
+                inputs: inputs,
+                calculations: result
+            };
+        }
+
+        function displayResults(person1Results, person2Results, familyStatus) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            let html = '';
+
+            // Determine if any person is "member not working"
+            const isPerson1NotWorking = person1Results.status === 'memberNotWorking';
+            const isPerson2NotWorking = person2Results && person2Results.status === 'memberNotWorking';
+            const hideCombinedSalary = isPerson1NotWorking || isPerson2NotWorking;
+
+            // Combined results at the top
+            const combinedDeductions = person1Results.calculations.totalDeductions + 
+                                       (person2Results ? person2Results.calculations.totalDeductions : 0);
+            const combinedAmount = person1Results.calculations.finalAmount + 
+                                   (person2Results ? person2Results.calculations.finalAmount : 0);
+
+            html += `
+                <div class="combined-results">
+                    <h2>חישוב משותף למשכורות</h2>
+                    ${!hideCombinedSalary ? `<p>${familyStatus === 'couple' ? 'משכורת משותפת לאחר הורדות' : 'משכורת לאחר הורדות'}: ${combinedAmount.toFixed(0)} ₪</p>` : ''}
+                    <p>סך כל הניכויים: ${combinedDeductions.toFixed(0)} ₪</p>
+                </div>
+            `;
+
+            // Individual results section
+            html += `
+                <div class="individual-results">
+                    ${generatePersonHTML(1, person1Results)}
+                    ${familyStatus === 'couple' && person2Results ? generatePersonHTML(2, person2Results) : ''}
+                </div>
+            `;
+
+            resultsContainer.innerHTML = html;
+
+            // Add visible class to trigger fade-in animation
+            setTimeout(() => {
+                const personResults = resultsContainer.querySelectorAll('.person-results');
+                personResults.forEach(result => {
+                    result.classList.add('visible');
+                });
+
+                // Scroll to the results section
+                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+            }, 0);
+        }
+
+        function generatePersonHTML(personNum, results) {
+            if (!results || !results.calculations) {
+                console.error('Missing results for person', personNum);
+                return '';
+            }
+
+            const status = results.status;
+            const calc = results.calculations;
+            const inputs = results.inputs;
+
+            // Helper function to safely format numbers
+            const formatNumber = (value) => (value || 0).toFixed(0);
+
+            return `
+                <div class="person-results">
+                    <h3>תוצאות חבר ${personNum}</h3>
+                    
+                    <!-- Basic Information -->
+                    <div class="info-section">
+                        ${status === 'memberWorking' || status === 'seniorWorkingMoney' ? `
+                            <p>שכר נטו: ${formatNumber(inputs.netSalary)} ₪</p>
+                            ${inputs.hasExpenses ? `<p>סכום החזר הוצאות: ${formatNumber(inputs.expenses)} ₪</p>` : ''}
+                        ` : ''}
+                        
+                        ${status.startsWith('senior') ? `<p>פנסיה: ${formatNumber(inputs.pension)} ₪</p>` : ''}
+                        
+                        ${status === 'seniorWorkingKibbutz' ? `<p>גמול תשלום: ${formatNumber(inputs.retention)} ₪</p>` : ''}
+                        ${status === 'seniorEntrepreneur' ? `<p>הכנסה מיזמות: ${formatNumber(inputs.entrepreneur)} ₪</p>` : ''}
+                        
+                        <p>שכר בסיס למיסוי: ${formatNumber(calc.baseSalary)} ₪</p>
+                    </div>
+
+                    <!-- Committee Details -->
+                    ${inputs.isCommitteeMember ? `
+                    <div class="committee-details">
+                        <p>תוספת חבר ועדה: ${formatNumber(calc.committeeBonus)} ₪</p>
+                        <p>מס חבר ועדה: ${Math.abs(calc.committeeTaxDeduction).toFixed(0)} ₪</p>
+                    </div>
+                    ` : ''}
+
+                    <!-- Tax Breakdown -->
+                    <div class="tax-breakdown">
+                        <p>ניכויים:</p>
+                        <ul>
+                            ${calc.memberTaxDeduction ? 
+                                `<li>מס חבר (7%): ${formatNumber(calc.memberTaxDeduction)} ₪</li>` : ''}
+                            
+                            ${calc.seniorTaxDeduction ? 
+                                `<li>מיסוי פנסיה (3.5%): ${formatNumber(calc.seniorTaxDeduction)} ₪</li>` : ''}
+                            
+                            ${calc.pensionTaxDeduction ? 
+                                `<li>מס פנסיה (3.5%): ${formatNumber(calc.pensionTaxDeduction)} ₪</li>` : ''}
+                            
+                            ${calc.salaryTaxDeduction ? 
+                                `<li>מיסוי על הכנסה מעבודה (7%): ${formatNumber(calc.salaryTaxDeduction)} ₪</li>` : ''}
+                            
+                            <li>מיסי קהילה: ${formatNumber(calc.communityTaxDeduction)} ₪</li>
+                            <li>ניכויים ראשוניים: ${formatNumber(calc.initialMainDeductions)} ₪</li>
+                            <li style="color: ${calc.isLimitReached ? 'red' : 'inherit'}">
+                                הגעה לתקרת ניכויים: ${calc.isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
+                            </li>
+                            <li>ניכויים סופיים: ${formatNumber(calc.mainDeductions)} ₪</li>
+                            <li>מס עזרה הדדית (0.5%): ${formatNumber(calc.helpTaxDeduction)} ₪</li>
+                            ${inputs.isCommitteeMember ? 
+                                `<li>מס חבר ועדה: ${formatNumber(calc.committeeTaxDeduction)} ₪</li>` : ''}
+                        </ul>
+                    </div>
+
+                    <!-- Final Results -->
+                    <div class="final-results">
+                        <p>סך כל הניכויים: ${formatNumber(calc.totalDeductions)} ₪</p>
+                        ${status !== 'memberNotWorking' ? `<p class="final-amount">משכורת לאחר הורדות: ${formatNumber(calc.finalAmount)} ₪</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add button event listener
+        document.querySelector('.modern-button').addEventListener('click', calculate);
+
+        // Add this function to be called when page loads
+        window.onload = function() {
+            // Make sure both person fields are visible initially
+            document.getElementById('person1Fields').style.display = 'block';
+            document.getElementById('person2Fields').style.display = 'block';
+            
+            // Initialize input fields for both persons
+            toggleInputFields(1);
+            toggleInputFields(2);
+        }
+
+        function togglePersonFields() {
+            const familyStatus = document.getElementById('familyStatus').value;
+            const person2Fields = document.getElementById('person2Fields');
+            
+            // Clear all inputs
+            clearAllInputs();
+            
+            // Reset both employment statuses to "memberWorking" and trigger input fields visibility
+            document.getElementById('employmentStatus1').value = 'memberWorking';
+            toggleInputFields(1); // This will show/hide relevant fields for person 1
+            
+            if (familyStatus === 'couple') {
+                person2Fields.style.display = 'block';
+                document.getElementById('employmentStatus2').value = 'memberWorking';
+                toggleInputFields(2); // This will show/hide relevant fields for person 2
+            } else {
+                person2Fields.style.display = 'none';
+            }
+            
+            // Clear results
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+        }
+
+        function clearAllInputs() {
+            // Clear inputs for both persons
+            for (let personNum = 1; personNum <= 2; personNum++) {
+                // Clear numeric inputs
+                document.getElementById(`pension${personNum}`).value = '';
+                document.getElementById(`retention${personNum}`).value = '';
+                document.getElementById(`entrepreneur${personNum}`).value = '';
+                document.getElementById(`netSalary${personNum}`).value = '';
+                document.getElementById(`expenses${personNum}`).value = '';
+                
+                // Uncheck checkboxes
+                document.getElementById(`committee${personNum}`).checked = false;
+                document.getElementById(`hasExpenses${personNum}`).checked = false;
+                
+                // Hide expenses input
+                document.getElementById(`expensesInput${personNum}`).style.display = 'none';
+            }
+        }
+
+        function clearPersonInputs(personNum) {
+            // Clear numeric inputs
+            document.getElementById(`pension${personNum}`).value = '';
+            document.getElementById(`retention${personNum}`).value = '';
+            document.getElementById(`entrepreneur${personNum}`).value = '';
+            document.getElementById(`netSalary${personNum}`).value = '';
+            document.getElementById(`expenses${personNum}`).value = '';
+            
+            // Uncheck checkboxes
+            document.getElementById(`committee${personNum}`).checked = false;
+            document.getElementById(`hasExpenses${personNum}`).checked = false;
+            
+            // Hide expenses input
+            document.getElementById(`expensesInput${personNum}`).style.display = 'none';
+            
+            // Clear results
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+        }
+
+        const TaxCalculator = {
+            // ... existing constants ...
+
+            calculatePerson1: function() {
+                const status = document.getElementById('employmentStatus1').value;
+                console.log('Person 1 status:', status);
+                
+                switch(status) {
+                    case 'memberWorking':
+                        return this.calculateMemberWorkingPerson1(1);
+                    case 'memberNotWorking':
+                        return this.calculateMemberNotWorkingPerson1(1);
+                    case 'seniorNotWorking':
+                        return this.calculateSeniorNotWorkingPerson1(1);
+                    case 'seniorWorkingKibbutz':
+                        return this.calculateSeniorWorkingKibbutzPerson1(1);
+                    case 'seniorEntrepreneur':
+                        return this.calculateSeniorEntrepreneurPerson1(1);
+                    case 'seniorWorkingMoney':
+                        return this.calculateSeniorWorkingMoneyPerson1(1);
+                }
+            },
+
+            calculatePerson2: function() {
+                const status = document.getElementById('employmentStatus2').value;
+                console.log('Person 2 status:', status);
+                
+                switch(status) {
+                    case 'memberWorking':
+                        return this.calculateMemberWorkingPerson2(2);
+                    case 'memberNotWorking':
+                        return this.calculateMemberNotWorkingPerson2(2);
+                    case 'seniorNotWorking':
+                        return this.calculateSeniorNotWorkingPerson2(2);
+                    case 'seniorWorkingKibbutz':
+                        return this.calculateSeniorWorkingKibbutzPerson2(2);
+                    case 'seniorEntrepreneur':
+                        return this.calculateSeniorEntrepreneurPerson2(2);
+                    case 'seniorWorkingMoney':
+                        return this.calculateSeniorWorkingMoneyPerson2(2);
+                }
+            }
+
+            // ... rest of your existing code ...
+        };
+    </script>
+    <footer>
+        הזורע, 2004. ט.ל.ח
+    </footer>
 </body>
 </html>
