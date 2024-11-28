@@ -108,6 +108,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
 
         .individual-results {
@@ -121,6 +122,8 @@
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
         }
 
         .person-results h3 {
@@ -150,49 +153,6 @@
             background: #f8f9fa;
             border-radius: 5px;
         }
-        select, input[type="number"] {
-    width: 80%; /* Adjust the width as needed */
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-}
-
-.currency-input {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    overflow: hidden;
-    width: 80%; /* Adjust as needed */
-    margin-bottom: 15px; /* Add spacing between inputs */
-}
-
-.currency-symbol {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-right: 1px solid var(--border-color);
-    color: #7f8c8d;
-}
-
-.currency-input input {
-    border: none;
-    padding: 10px;
-    width: 100%;
-    font-size: 14px;
-    outline: none;
-    direction: rtl;
-}
-        footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #f5f6fa;
-    color: #7f8c8d;
-    font-size: 14px;
-    border-top: 1px solid #bdc3c7;
-    margin-top: 20px;
-}
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -203,6 +163,39 @@
             .modern-container {
                 padding: 10px;
             }
+        }
+
+        .tax-breakdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tax-breakdown li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .tax-breakdown li:last-child {
+            border-bottom: none;
+        }
+
+        .tax-breakdown li span {
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
+
+        .final-results {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .final-results p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
         }
     </style>
 </head>
@@ -450,13 +443,13 @@
                         ${isCommitteeMember ? `
                         <div class="committee-details">
                             <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                            <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                         </div>
                         ` : ''}
                         
                         <p>ניכויים:</p>
                         <ul>
-                            <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                            <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                             <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                             <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
                             <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
@@ -464,7 +457,7 @@
                             </li>
                             <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                             <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                            ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                         </ul>
                         <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                         <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -531,13 +524,13 @@
                             ${isCommitteeMember ? `
                             <div class="committee-details">
                                 <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
                             <p>ניכויים:</p>
                             <ul>
-                                <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
                                 <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
@@ -545,7 +538,7 @@
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -644,7 +637,7 @@
                             <p>שכר בסיס למיסוי: ${baseSalary.toFixed(0)} ₪</p>
                             <p>ניכויים:</p>
                             <ul>
-                                <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
                                 <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
@@ -739,7 +732,7 @@
                             ${isCommitteeMember ? `
                             <div class="committee-details">
                                 <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -753,7 +746,7 @@
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -850,7 +843,7 @@
                             ${isCommitteeMember ? `
                             <div class="committee-details">
                                 <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -864,7 +857,7 @@
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -966,7 +959,7 @@
                             ${isCommitteeMember ? `
                             <div class="committee-details">
                                 <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -981,7 +974,7 @@
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -1146,24 +1139,21 @@
             const resultsContainer = document.getElementById('resultsContainer');
             let html = '';
 
-            // Determine if any person is "member not working"
-            const isPerson1NotWorking = person1Results.status === 'memberNotWorking';
-            const isPerson2NotWorking = person2Results && person2Results.status === 'memberNotWorking';
-            const hideCombinedSalary = isPerson1NotWorking || isPerson2NotWorking;
-
-            // Combined results at the top
-            const combinedDeductions = person1Results.calculations.totalDeductions + 
-                                       (person2Results ? person2Results.calculations.totalDeductions : 0);
-            const combinedAmount = person1Results.calculations.finalAmount + 
-                                   (person2Results ? person2Results.calculations.finalAmount : 0);
-
-            html += `
-                <div class="combined-results">
-                    <h2>חישוב משותף למשכורות</h2>
-                    ${!hideCombinedSalary ? `<p>${familyStatus === 'couple' ? 'משכורת משותפת לאחר הורדות' : 'משכורת לאחר הורדות'}: ${combinedAmount.toFixed(0)} ₪</p>` : ''}
-                    <p>סך כל הניכויים: ${combinedDeductions.toFixed(0)} ₪</p>
-                </div>
-            `;
+            // Combined results at the top if applicable
+            if (familyStatus === 'couple' && person2Results) {
+                const combinedDeductions = person1Results.calculations.totalDeductions + 
+                                         person2Results.calculations.totalDeductions;
+                const combinedAmount = person1Results.calculations.finalAmount + 
+                                       person2Results.calculations.finalAmount;
+                
+                html += `
+                    <div class="combined-results">
+                        <h2>חישוב משותף למשכורות</h2>
+                        <p>סך כל הניכויים המשולבים: ${combinedDeductions.toFixed(0)} ₪</p>
+                        <p>משכורת משותפת: ${combinedAmount.toFixed(0)} ₪</p>
+                    </div>
+                `;
+            }
 
             // Individual results section
             html += `
@@ -1223,7 +1213,7 @@
                     ${inputs.isCommitteeMember ? `
                     <div class="committee-details">
                         <p>תוספת חבר ועדה: ${formatNumber(calc.committeeBonus)} ₪</p>
-                        <p>מיסוי על הכנסות מעבודה ועדה: ${Math.abs(calc.committeeTaxDeduction).toFixed(0)} ₪</p>
+                        <p>מס חבר ועדה: ${Math.abs(calc.committeeTaxDeduction).toFixed(0)} ₪</p>
                     </div>
                     ` : ''}
 
@@ -1232,7 +1222,7 @@
                         <p>ניכויים:</p>
                         <ul>
                             ${calc.memberTaxDeduction ? 
-                                `<li>מיסוי על הכנסות מעבודה (7%): ${formatNumber(calc.memberTaxDeduction)} ₪</li>` : ''}
+                                `<li>מס חבר (7%): ${formatNumber(calc.memberTaxDeduction)} ₪</li>` : ''}
                             
                             ${calc.seniorTaxDeduction ? 
                                 `<li>מיסוי פנסיה (3.5%): ${formatNumber(calc.seniorTaxDeduction)} ₪</li>` : ''}
@@ -1251,7 +1241,7 @@
                             <li>ניכויים סופיים: ${formatNumber(calc.mainDeductions)} ₪</li>
                             <li>מס עזרה הדדית (0.5%): ${formatNumber(calc.helpTaxDeduction)} ₪</li>
                             ${inputs.isCommitteeMember ? 
-                                `<li>מיסוי על הכנסות מעבודה ועדה: ${formatNumber(calc.committeeTaxDeduction)} ₪</li>` : ''}
+                                `<li>מס חבר ועדה: ${formatNumber(calc.committeeTaxDeduction)} ₪</li>` : ''}
                         </ul>
                     </div>
 
@@ -1387,8 +1377,5 @@
             // ... rest of your existing code ...
         };
     </script>
-    <footer>
-        הזורע, 2004. ט.ל.ח
-    </footer>
 </body>
 </html>
