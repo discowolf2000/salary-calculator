@@ -21,6 +21,14 @@
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
         }
 
         .modern-container {
@@ -53,6 +61,12 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .modern-card:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .form-group {
@@ -60,10 +74,9 @@
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--secondary-color);
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         select, input[type="number"] {
@@ -91,11 +104,12 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .modern-button:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         /* Results styling */
@@ -107,8 +121,7 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .individual-results {
@@ -122,8 +135,6 @@
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #e0e0e0;
         }
 
         .person-results h3 {
@@ -152,17 +163,6 @@
             margin-top: 10px;
             background: #f8f9fa;
             border-radius: 5px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .members-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .modern-container {
-                padding: 10px;
-            }
         }
 
         .tax-breakdown ul {
@@ -197,6 +197,113 @@
             font-weight: bold;
             color: #2c3e50;
         }
+
+        .currency-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+            width: 80%; /* Adjust as needed */
+            margin-bottom: 15px; /* Add spacing between inputs */
+        }
+
+        .currency-symbol {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-right: 1px solid var(--border-color);
+            color: #7f8c8d;
+        }
+
+        .currency-input input {
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 14px;
+            outline: none;
+            direction: rtl;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f6fa;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #bdc3c7;
+            margin-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .members-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modern-container {
+                padding: 10px;
+            }
+        }
+
+        .info-note {
+            font-size: 0.9em;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: white;
+            color: black;
+            text-align: right;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            right: 50%;
+            transform: translateX(50%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            right: 50%;
+            margin-right: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -221,20 +328,17 @@
                     <select id="employmentStatus1">
                         <option value="memberWorking">חבר עובד</option>
                         <option value="memberNotWorking">חבר שאינו מעביר הכנסה</option>
-                        <option value="seniorNotWorking">גמלאי שאינו עובד</option>
-                        <option value="seniorWorkingKibbutz">גמלאי עובד בקיבוץ</option>
-                        <option value="seniorEntrepreneur">גמלאי יזם</option>
-                        <option value="seniorWorkingMoney">גמלאי מכניס משכורת</option>
+                        <option value="seniorNotWorking">גימלאי שאינו עובד</option>
+                        <option value="seniorWorkingKibbutz">גימלאי עובד בקיבוץ</option>
+                        <option value="seniorEntrepreneur">גימלאי יזם</option>
+                        <option value="seniorWorkingMoney">גימלאי מכניס משכורת</option>
                     </select>
                 </div>
 
                 <div class="income-section">
                     <h4>מידע על הכנסה</h4>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="committee1">
-                            חבר בועדה בקיבוץ
-                        </label>
+                    <div class="note-section" style="display: none;" id="notWorkingNote1">
+                        <p class="info-note">החישוב למיסוי לחבר שאינו מעביר הכנסה לקיבוץ נעשה על לפי פעמים השכר הממוצע במשק.</p>
                     </div>
                     <div class="form-group">
                         <label for="pension1">פנסיה:</label>
@@ -245,7 +349,7 @@
                         <input type="number" id="retention1" min="0">
                     </div>
                     <div class="form-group">
-                        <label for="entrepreneur1">יזמות:</label>
+                        <label for="entrepreneur1">הכנסה מיזמות:</label>
                         <input type="number" id="entrepreneur1" min="0">
                     </div>
                     <div class="form-group">
@@ -262,6 +366,17 @@
                             </div>
                         </div>
                     </div>
+                    <h5>תגמולים נוספים</h5>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="committee1">
+                            חבר בועדה בקיבוץ
+                            <div class="tooltip">
+                                <span class="info-icon">?</span>
+                                <span class="tooltiptext">חבר בועדה בקיבוץ מקבל גמול של 1,000 ש"ח בחודש</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -272,20 +387,17 @@
                     <select id="employmentStatus2">
                         <option value="memberWorking">חבר עובד</option>
                         <option value="memberNotWorking">חבר שאינו מעביר הכנסה</option>
-                        <option value="seniorNotWorking">גמלאי שאינו עובד</option>
-                        <option value="seniorWorkingKibbutz">גמלאי עובד בקיבוץ</option>
-                        <option value="seniorEntrepreneur">גמלאי יזם</option>
-                        <option value="seniorWorkingMoney">גמלאי מכניס משכורת</option>
+                        <option value="seniorNotWorking">גימלאי שאינו עובד</option>
+                        <option value="seniorWorkingKibbutz">גימלאי עובד בקיבוץ</option>
+                        <option value="seniorEntrepreneur">גימלאי יזם</option>
+                        <option value="seniorWorkingMoney">גימלאי מכניס משכורת</option>
                     </select>
                 </div>
 
                 <div class="income-section">
                     <h4>מידע על הכנסה</h4>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="committee2">
-                            חבר ועדה
-                        </label>
+                    <div class="note-section" style="display: none;" id="notWorkingNote2">
+                        <p class="info-note">החישוב למיסוי לחבר שאינו מעביר הכנסה לקיבוץ נעשה על לפי פעמים השכר הממוצע במשק.</p>
                     </div>
                     <div class="form-group">
                         <label for="pension2">פנסיה:</label>
@@ -296,7 +408,7 @@
                         <input type="number" id="retention2" min="0">
                     </div>
                     <div class="form-group">
-                        <label for="entrepreneur2">יזמות:</label>
+                        <label for="entrepreneur2">הכנסה מיזמות:</label>
                         <input type="number" id="entrepreneur2" min="0">
                     </div>
                     <div class="form-group">
@@ -312,6 +424,17 @@
                                 <input type="number" id="expenses2" min="0">
                             </div>
                         </div>
+                    </div>
+                    <h5>תגמולים נוספים</h5>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="committee2">
+                             חבר בועדה בקיבוץ
+                            <div class="tooltip">
+                                <span class="info-icon">?</span>
+                                <span class="tooltiptext">חבר בועדה בקיבוץ מקבל גמול של 1,000 ש"ח בח��דש</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -356,12 +479,14 @@
             const retentionContainer = document.getElementById(`retention${personNum}`).parentElement;
             const entrepreneurContainer = document.getElementById(`entrepreneur${personNum}`).parentElement;
             const netSalaryContainer = document.getElementById(`netSalary${personNum}`).parentElement;
+            const notWorkingNote = document.getElementById(`notWorkingNote${personNum}`);
 
             // Hide all by default
             pensionContainer.style.display = 'none';
             retentionContainer.style.display = 'none'; 
             entrepreneurContainer.style.display = 'none';
             netSalaryContainer.style.display = 'none';
+            notWorkingNote.style.display = 'none';
 
             // Show relevant fields based on employment status
             switch(employmentStatus) {
@@ -369,7 +494,7 @@
                     netSalaryContainer.style.display = 'block';
                     break;
                 case 'memberNotWorking':
-                    // All fields remain hidden
+                    notWorkingNote.style.display = 'block';
                     break;
                 case 'seniorNotWorking':
                     pensionContainer.style.display = 'block';
@@ -435,29 +560,29 @@
             return {
                 html: `
                     <div class="person-results">
-                        <h3>תוצאות חבר ${personNum}</h3>
+                        <h3>חישוב עבור חבר ${personNum}</h3>
                         <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
                         ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
                         <p>שכר בסיס למיסוי (שכר נטו - החזר הוצאות): ${baseSalary.toFixed(0)} ₪</p>
                         
                         ${isCommitteeMember ? `
                         <div class="committee-details">
-                            <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                            <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                            <p>תגמול לחבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                            <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                         </div>
                         ` : ''}
                         
                         <p>ניכויים:</p>
                         <ul>
-                            <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                            <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                             <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                             <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                            <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                            <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                 הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                             </li>
                             <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                             <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                            ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                            ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                         </ul>
                         <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                         <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -516,29 +641,29 @@
                 return {
                     html: `
                         <div class="person-results">
-                            <h3>תוצאות חבר ${personNum}</h3>
+                            <h3>חישוב עבור חבר ${personNum}</h3>
                             <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
                             ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
                             <p>שכר בסיס למיסוי (שכר נטו - החזר הוצאות): ${baseSalary.toFixed(0)} ₪</p>
                             
                             ${isCommitteeMember ? `
                             <div class="committee-details">
-                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>תגמול לחבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
                             <p>ניכויים:</p>
                             <ul>
-                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                     הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -633,14 +758,14 @@
                 return {
                     html: `
                         <div class="person-results">
-                            <h3>תוצאות חבר ${personNum}</h3>
+                            <h3>חישוב עבור חבר ${personNum}</h3>
                             <p>שכר בסיס למיסוי: ${baseSalary.toFixed(0)} ₪</p>
                             <p>ניכויים:</p>
                             <ul>
-                                <li>מס חבר (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
+                                <li>מיסוי על הכנסות מעבודה (${(memberTax*100).toFixed(1)}%): ${memberTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                     הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
@@ -725,14 +850,14 @@
                 return {
                     html: `
                         <div class="person-results">
-                            <h3>תוצאות חבר ${personNum}</h3>
+                            <h3>חישוב עבור חבר ${personNum}</h3>
                             <p>פנסיה: ${pension.toFixed(0)} ₪</p>
                             <p>שכר בסיס למיסוי: ${baseSalary.toFixed(0)} ₪</p>
                             
                             ${isCommitteeMember ? `
                             <div class="committee-details">
-                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>תגמול לחבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -741,15 +866,15 @@
                                 <li>מיסוי פנסיה (${(seniorTax*100).toFixed(1)}%): ${seniorTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                     הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
-                            <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
+                            <p>משכורת לאחר הור��ות: ${finalAmount.toFixed(0)} ₪</p>
                         </div>
                     `,
                     values: {
@@ -835,15 +960,15 @@
                 return {
                     html: `
                         <div class="person-results">
-                            <h3>תוצאות חבר ${personNum}</h3>
+                            <h3>חישוב עבור חבר ${personNum}</h3>
                             <p>פנסיה: ${pension.toFixed(0)} ₪</p>
                             <p>גמול תשלום: ${retention.toFixed(0)} ₪</p>
                             <p>שכר בסיס למיסוי (פנסיה + גמול תשלום): ${baseSalary.toFixed(0)} ₪</p>
                             
                             ${isCommitteeMember ? `
                             <div class="committee-details">
-                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>תגמול לחבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -852,12 +977,12 @@
                                 <li>מיסוי פנסיה (${(seniorTax*100).toFixed(1)}%): ${seniorTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                     הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -949,17 +1074,17 @@
                 return {
                     html: `
                         <div class="person-results">
-                            <h3>תוצאות חבר ${personNum}</h3>
+                            <h3>תוצאות חישוב עבור חבר ${personNum}</h3>
                             <p>פנסיה: ${pension.toFixed(0)} ₪</p>
                             <p>שכר נטו: ${netSalary.toFixed(0)} ₪</p>
                             ${hasExpenses ? `<p>סכום החזר הוצאות: ${expenses.toFixed(0)} ₪</p>` : ''}
                             <p>שכר לאחר הוצאות: ${salaryAfterExpenses.toFixed(0)} ₪</p>
-                            <p>שכר בסיס למיסוי (פנסיה + שכר נטו - הוצאות): ${baseSalary.toFixed(0)} ₪</p>
+                            <p>שכר ב��יס למיסוי (פנסיה + שכר נטו - הוצאות): ${baseSalary.toFixed(0)} ₪</p>
                             
                             ${isCommitteeMember ? `
                             <div class="committee-details">
-                                <p>תוספת חבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
-                                <p>מס חבר ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
+                                <p>תגמול לחבר ועדה: ${committeeBonus.toFixed(0)} ₪</p>
+                                <p>מיסוי על הכנסות מעבודה ועדה: 7% (${Math.abs(committeeTaxDeduction).toFixed(0)} ₪)</p>
                             </div>
                             ` : ''}
                             
@@ -969,12 +1094,12 @@
                                 <li>מיסוי על הכנסה מעבודה (${(memberTax*100).toFixed(1)}%): ${salaryTaxDeduction.toFixed(0)} ₪</li>
                                 <li>מיסי קהילה: ${communityTaxDeduction.toFixed(0)} ₪</li>
                                 <li>ניכויים ראשוניים: ${initialMainDeductions.toFixed(0)} ₪</li>
-                                <li style="color: ${isLimitReached ? 'red' : 'inherit'}">
+                                <li style="color: ${isLimitReached ? 'green' : 'inherit'}">
                                     הגעה לתקרת ניכויים: ${isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                                 </li>
                                 <li>ניכויים סופיים: ${mainDeductions.toFixed(0)} ₪</li>
                                 <li>מס עזרה הדדית (0.5%): ${helpTaxDeduction.toFixed(0)} ₪</li>
-                                ${isCommitteeMember ? `<li>מס חבר ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
+                                ${isCommitteeMember ? `<li>מיסוי על הכנסות מעבודה ועדה: ${committeeTaxDeduction.toFixed(0)} ₪</li>` : ''}
                             </ul>
                             <p>סך כל הניכויים: ${totalDeductions.toFixed(0)} ₪</p>
                             <p>משכורת לאחר הורדות: ${finalAmount.toFixed(0)} ₪</p>
@@ -1139,21 +1264,24 @@
             const resultsContainer = document.getElementById('resultsContainer');
             let html = '';
 
-            // Combined results at the top if applicable
-            if (familyStatus === 'couple' && person2Results) {
-                const combinedDeductions = person1Results.calculations.totalDeductions + 
-                                         person2Results.calculations.totalDeductions;
-                const combinedAmount = person1Results.calculations.finalAmount + 
-                                       person2Results.calculations.finalAmount;
-                
-                html += `
-                    <div class="combined-results">
-                        <h2>חישוב משותף למשכורות</h2>
-                        <p>סך כל הניכויים המשולבים: ${combinedDeductions.toFixed(0)} ₪</p>
-                        <p>משכורת משותפת: ${combinedAmount.toFixed(0)} ₪</p>
-                    </div>
-                `;
-            }
+            // Determine if any person is "member not working"
+            const isPerson1NotWorking = person1Results.status === 'memberNotWorking';
+            const isPerson2NotWorking = person2Results && person2Results.status === 'memberNotWorking';
+            const hideCombinedSalary = isPerson1NotWorking || isPerson2NotWorking;
+
+            // Combined results at the top
+            const combinedDeductions = person1Results.calculations.totalDeductions + 
+                                       (person2Results ? person2Results.calculations.totalDeductions : 0);
+            const combinedAmount = person1Results.calculations.finalAmount + 
+                                   (person2Results ? person2Results.calculations.finalAmount : 0);
+
+            html += `
+                <div class="combined-results">
+                    <h2>חישוב משותף למשכורות</h2>
+                    ${!hideCombinedSalary ? `<p>${familyStatus === 'couple' ? 'משכורת משותפת לאחר הורדות' : 'משכורת לאחר הורדות'}: ${combinedAmount.toFixed(0)} ₪</p>` : ''}
+                    <p>סך כל הניכויים: ${combinedDeductions.toFixed(0)} ₪</p>
+                </div>
+            `;
 
             // Individual results section
             html += `
@@ -1192,7 +1320,7 @@
 
             return `
                 <div class="person-results">
-                    <h3>תוצאות חבר ${personNum}</h3>
+                    <h3>תוצאות חישוב עבור חבר ${personNum}</h3>
                     
                     <!-- Basic Information -->
                     <div class="info-section">
@@ -1204,7 +1332,7 @@
                         ${status.startsWith('senior') ? `<p>פנסיה: ${formatNumber(inputs.pension)} ₪</p>` : ''}
                         
                         ${status === 'seniorWorkingKibbutz' ? `<p>גמול תשלום: ${formatNumber(inputs.retention)} ₪</p>` : ''}
-                        ${status === 'seniorEntrepreneur' ? `<p>הכנסה מיזמות: ${formatNumber(inputs.entrepreneur)} ₪</p>` : ''}
+                        ${status === 'seniorEntrepreneur' ? `<p>הכנסה מהכנסה מיזמות: ${formatNumber(inputs.entrepreneur)} ₪</p>` : ''}
                         
                         <p>שכר בסיס למיסוי: ${formatNumber(calc.baseSalary)} ₪</p>
                     </div>
@@ -1212,8 +1340,8 @@
                     <!-- Committee Details -->
                     ${inputs.isCommitteeMember ? `
                     <div class="committee-details">
-                        <p>תוספת חבר ועדה: ${formatNumber(calc.committeeBonus)} ₪</p>
-                        <p>מס חבר ועדה: ${Math.abs(calc.committeeTaxDeduction).toFixed(0)} ₪</p>
+                        <p>תגמול לחבר ועדה: ${formatNumber(calc.committeeBonus)} ₪</p>
+                        <p>מיסוי על הכנסות מעבודה ועדה: ${Math.abs(calc.committeeTaxDeduction).toFixed(0)} ₪</p>
                     </div>
                     ` : ''}
 
@@ -1222,7 +1350,7 @@
                         <p>ניכויים:</p>
                         <ul>
                             ${calc.memberTaxDeduction ? 
-                                `<li>מס חבר (7%): ${formatNumber(calc.memberTaxDeduction)} ₪</li>` : ''}
+                                `<li>מיסוי על הכנסות מעבודה (7%): ${formatNumber(calc.memberTaxDeduction)} ₪</li>` : ''}
                             
                             ${calc.seniorTaxDeduction ? 
                                 `<li>מיסוי פנסיה (3.5%): ${formatNumber(calc.seniorTaxDeduction)} ₪</li>` : ''}
@@ -1235,13 +1363,13 @@
                             
                             <li>מיסי קהילה: ${formatNumber(calc.communityTaxDeduction)} ₪</li>
                             <li>ניכויים ראשוניים: ${formatNumber(calc.initialMainDeductions)} ₪</li>
-                            <li style="color: ${calc.isLimitReached ? 'red' : 'inherit'}">
+                            <li style="color: ${calc.isLimitReached ? 'green' : 'inherit'}">
                                 הגעה לתקרת ניכויים: ${calc.isLimitReached ? 'כן (מוגבל ל-' + deductionLimit + ' ₪)' : 'לא'}
                             </li>
                             <li>ניכויים סופיים: ${formatNumber(calc.mainDeductions)} ₪</li>
                             <li>מס עזרה הדדית (0.5%): ${formatNumber(calc.helpTaxDeduction)} ₪</li>
                             ${inputs.isCommitteeMember ? 
-                                `<li>מס חבר ועדה: ${formatNumber(calc.committeeTaxDeduction)} ₪</li>` : ''}
+                                `<li>מיסוי על הכנסות מעבודה ועדה: ${formatNumber(calc.committeeTaxDeduction)} ₪</li>` : ''}
                         </ul>
                     </div>
 
